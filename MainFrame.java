@@ -194,24 +194,26 @@ public class MainFrame extends JFrame {
         return panel;
     }
 
-    private void mettreAJourSecondes() {
-        modele.retirerElementType(AiguilleSecondes.class);
-        modele.retirerElementType(MiniCadranSecondes.class);
-        modele.retirerElementType(CompteurSecondes.class);
+private void mettreAJourSecondes() {
+    modele.retirerElementType(AiguilleSecondes.class);
+    modele.retirerElementType(MiniCadranSecondes.class);
+    modele.retirerElementType(CompteurSecondes.class);
 
-        if (rbTrotteuse.isSelected()) {
-            AiguilleSecondes as = new AiguilleSecondes();
-            as.setCouleur(reglages.getCouleurAiguilles()); 
-            modele.ajouterElement(as);
+    if (rbTrotteuse.isSelected()) {
+        AiguilleSecondes as = new AiguilleSecondes();
+        as.setCouleur(reglages.getCouleurAiguilles());
+        modele.ajouterElement(as);
 
-        } else if (rbMiniCadran.isSelected()) {
-            modele.ajouterElement(new MiniCadranSecondes());
-        } else if (rbCompteur.isSelected()) {
-            modele.ajouterElement(new CompteurSecondes());
-        }
+    } else if (rbMiniCadran.isSelected()) {
+        // On insère le mini cadran EN PREMIER (index 0)
+        modele.ajouterElementEnPremier(new MiniCadranSecondes());
 
-        watchPanel.repaint();
+    } else if (rbCompteur.isSelected()) {
+        modele.ajouterElement(new CompteurSecondes());
     }
+
+    watchPanel.repaint();
+}
 
     // =========================================================
     //  PAGE 2 — Date

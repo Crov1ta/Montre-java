@@ -39,6 +39,7 @@ public class WatchModel implements Serializable {
 
     public void ajouterElement(ElementMontre e)  { elements.add(e); }
     public void retirerElement(ElementMontre e)  { elements.remove(e); }
+    public void ajouterElementEnPremier(ElementMontre e) { elements.add(0, e); }
     public List<ElementMontre> getElements()     { return elements; }
     public LocalTime getHeureCourante()          { return heureCourante; }
 
@@ -72,14 +73,14 @@ public class WatchModel implements Serializable {
         }
     }
     public void retirerElementType(Class<?> type) {
-    int i = 0;
-    while (i < elements.size()) {
-        if (elements.get(i).getClass() == type) {
-            elements.remove(i);
-        } else {
-            i++;
+        int i = 0;
+        while (i < elements.size()) {
+            if (type.isInstance(elements.get(i))) {
+                elements.remove(i);
+            } else {
+                i++;
+            }
         }
-    }
     }
     public ReglagesMontre getReglages() { return reglages; }
     
