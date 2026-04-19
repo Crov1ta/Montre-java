@@ -1,6 +1,4 @@
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.time.LocalTime;
 import javax.swing.JPanel;
 
 /**
@@ -12,13 +10,10 @@ import javax.swing.JPanel;
  */
 public abstract class ElementMontreAbstrait implements ElementMontre {
 
-    @Override
-    public void configure(JPanel panel) {
-        // Par défaut : aucune option de configuration
-    }
+ 
+    public void configure(JPanel panel) {}
 
-    @Override
-    public void setCouleur(Color c) {
-        // Par défaut : ignoré
-    }
+    public void setCouleur(Color c) {}
+    
+    public void setPolice (String p){}
 }

@@ -185,11 +185,40 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) { mettreAJourSecondes(); }
         });
+        JButton btnSimuler = new JButton("Heure personnalisée");
+        btnSimuler.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTextField tfH = new JTextField("12", 2);
+                JTextField tfM = new JTextField("00", 2);
+                JTextField tfS = new JTextField("00", 2);
+
+                JPanel p = new JPanel();
+                p.add(new JLabel("H:")); p.add(tfH);
+                p.add(new JLabel("M:")); p.add(tfM);
+                p.add(new JLabel("S:")); p.add(tfS);
+
+                int result = JOptionPane.showConfirmDialog(null, p,
+                    "Heure de départ", JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    try {
+                        int h = Integer.parseInt(tfH.getText().trim());
+                        int m = Integer.parseInt(tfM.getText().trim());
+                        int s = Integer.parseInt(tfS.getText().trim());
+                        modele.demarrerSimulation(h, m, s);
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Heure invalide.");
+                    }
+                }
+            }
+        });
 
         panel.add(new JLabel("Secondes : "));
         panel.add(rbTrotteuse);
         panel.add(rbMiniCadran);
         panel.add(rbCompteur);
+        panel.add(btnSimuler); 
 
         return panel;
     }
@@ -334,12 +363,13 @@ private void mettreAJourSecondes() {
         options.add(rbRond);
         options.add(rbCarre);
         options.add(Box.createVerticalStrut(15));
+
         // Couleur & type police
+
         JButton btnCouleurAig= new JButton("Couleur aiguille");
         btnCouleurAig.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e){
                  Color c = JColorChooser.showDialog(null, "Couleur des aiguilles", Color.RED);
-                 
                  if ( c != null){
                     reglages.setCouleurAiguilles(c);
                     for (ElementMontre el : modele.getElements()){
@@ -349,9 +379,29 @@ private void mettreAJourSecondes() {
                  }
             }
         });
+        String[] polices = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        JComboBox<String> comboPolice = new JComboBox<>(polices);
+        comboPolice.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e){
+                String police = (String) comboPolice.getSelectedItem();
+                if ( police != null){
+                    for (ElementMontre el : modele.getElements()){
+                        el.setPolice(police);
+                    }
+                    watchPanel.repaint();
+                }
+            }
+        });
+
         options.add(new JLabel(" Couleur & type police :")); 
         options.add(btnCouleurAig);              
         options.add(Box.createVerticalStrut(15));
+        options.add(comboPolice);
+        options.add(Box.createVerticalStrut(15));
+        comboPolice.setMaximumSize(new Dimension(200, 30));
+
+
+
         // --- Couleur du fond ---
         options.add(new JLabel("Fond :"));
         
@@ -457,12 +507,14 @@ private void mettreAJourSecondes() {
             }
         });
 
-        options.add(Box.createVerticalStrut(15));
-        options.add(btnSauvegarder);
-        options.add(btnCharger);
+
 
         options.add(rbAnalogique);
         options.add(rbNumerique);
+
+        options.add(Box.createVerticalStrut(15));
+        options.add(btnSauvegarder);
+        options.add(btnCharger);
 
         page.add(options, BorderLayout.CENTER);
         return page;

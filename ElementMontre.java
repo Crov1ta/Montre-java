@@ -27,4 +27,8 @@ public interface ElementMontre extends Serializable {
     String getNom();
 
     public void setCouleur( Color c);   
+
+     public void setPolice (String p);
+
+    
 }
