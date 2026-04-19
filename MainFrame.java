@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.lang.model.element.Element;
 
 /**
  * Fenêtre principale de l'application Montre.
@@ -359,18 +358,6 @@ public class MainFrame extends JFrame {
         ButtonGroup  grFond     = new ButtonGroup();
         grFond.add(rbUniforme);
         grFond.add(rbDegrade);
-
-        btnCouleurAig.addActionListener(new ActionListener(){
-            @Override public void actionPerformed(ActionEvent e){
-                 Color c = JColorChooser.showDialog(null, "Couleur des aiguilles", Color.RED);
-                 if ( c != null){
-                    for (ElementMontre el : modele.getElements()){
-                        el.setCouleur(c);
-                    }
-                    watchPanel.repaint();
-                 }
-            }
-        });
 
         rbUniforme.addActionListener(new ActionListener() {
             @Override

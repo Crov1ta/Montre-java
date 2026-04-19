@@ -1,7 +1,8 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 import java.time.LocalTime;
-import javax.swing.JPanel ; 
+import javax.swing.JPanel;
 
 /**
  * Interface représentant un élément affichable sur une montre analogique.
@@ -10,7 +11,7 @@ import javax.swing.JPanel ;
  * @author Mohamed
  * @version 1.0
  */
-public interface ElementMontre {
+public interface ElementMontre extends Serializable {
 
     /**
      * Met à jour l'état interne de l'élément en fonction de l'heure courante.
@@ -27,4 +28,3 @@ public interface ElementMontre {
 
     public void setCouleur( Color c);   
 }
- 

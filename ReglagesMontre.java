@@ -26,7 +26,7 @@ public class ReglagesMontre implements Serializable {
     private Color         couleurFond   = Color.BLACK;
     private Color         couleurFond2  = Color.DARK_GRAY; // pour le dégradé
     private TypeAffichage typeAffichage = TypeAffichage.ANALOGIQUE;
-    private Color         couleurAiguilles;
+    private Color         couleurAiguilles = Color.RED;
 
     // --- Getters / Setters ---
 

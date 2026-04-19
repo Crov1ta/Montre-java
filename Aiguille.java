@@ -43,10 +43,10 @@ public abstract class Aiguille extends ElementMontreAbstrait {
     public void setCouleur(Color couleur) {
         this.couleur = couleur;
     }
-    public void setEpesseur( float ep){
-        this.epaisseur = ep ;
+    public void setEpaisseur(float ep) {
+        this.epaisseur = ep;
     }
-    public void setratioLongueur( double ratio){
-        this.ratioLongueur = ratio ;
+    public void setRatioLongueur(double ratio) {
+        this.ratioLongueur = ratio;
     }
 }
