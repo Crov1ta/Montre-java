@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Image;
 import java.io.Serializable;
 
 /**
@@ -16,7 +17,7 @@ public class ReglagesMontre implements Serializable {
     public enum Forme { ROND, CARRE }
 
     // --- Type de fond ---
-    public enum TypeFond { UNIFORME, DEGRADE }
+    public enum TypeFond { UNIFORME, DEGRADE, IMAGE }
 
     // --- Type d'affichage ---
     public enum TypeAffichage { ANALOGIQUE, NUMERIQUE }
@@ -27,6 +28,10 @@ public class ReglagesMontre implements Serializable {
     private Color         couleurFond2  = Color.DARK_GRAY; // pour le dégradé
     private TypeAffichage typeAffichage = TypeAffichage.ANALOGIQUE;
     private Color         couleurAiguilles = Color.RED;
+
+    // L'image n'est pas sérialisable : transient + on garde le chemin pour recharger
+    private transient Image imageFond = null;
+    private String cheminImageFond    = null;
 
     // --- Getters / Setters ---
 
@@ -47,4 +52,16 @@ public class ReglagesMontre implements Serializable {
 
     public Color getCouleurAiguilles()              { return couleurAiguilles; }
     public void setCouleurAiguilles(Color c)        { this.couleurAiguilles = c; }
+
+    public Image getImageFond()                     { return imageFond; }
+    public void setImageFond(Image img, String chemin) {
+        this.imageFond       = img;
+        this.cheminImageFond = chemin;
+        this.typeFond        = TypeFond.IMAGE;
+    }
+    public void supprimerImageFond() {
+        this.imageFond       = null;
+        this.cheminImageFond = null;
+    }
+    public String getCheminImageFond()              { return cheminImageFond; }
 }

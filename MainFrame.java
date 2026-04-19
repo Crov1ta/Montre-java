@@ -357,14 +357,20 @@ private void mettreAJourSecondes() {
         
         JRadioButton rbUniforme = new JRadioButton("Uniforme", true);
         JRadioButton rbDegrade  = new JRadioButton("Dégradé");
+        JRadioButton rbImage    = new JRadioButton("Image");
         ButtonGroup  grFond     = new ButtonGroup();
         grFond.add(rbUniforme);
         grFond.add(rbDegrade);
+        grFond.add(rbImage);
+
+        JButton btnChoisirImage = new JButton("Choisir une image...");
+        btnChoisirImage.setEnabled(false);
 
         rbUniforme.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reglages.setTypeFond(ReglagesMontre.TypeFond.UNIFORME);
+                btnChoisirImage.setEnabled(false);
                 watchPanel.repaint();
             }
         });
@@ -372,12 +378,40 @@ private void mettreAJourSecondes() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reglages.setTypeFond(ReglagesMontre.TypeFond.DEGRADE);
+                btnChoisirImage.setEnabled(false);
                 watchPanel.repaint();
+            }
+        });
+        rbImage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnChoisirImage.setEnabled(true);
+                // Si une image est déjà chargée, on l'applique directement
+                if (reglages.getImageFond() != null) {
+                    reglages.setTypeFond(ReglagesMontre.TypeFond.IMAGE);
+                    watchPanel.repaint();
+                }
+            }
+        });
+        btnChoisirImage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fc = new JFileChooser();
+                fc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                        "Images (jpg, png, gif)", "jpg", "jpeg", "png", "gif"));
+                if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    String chemin = fc.getSelectedFile().getAbsolutePath();
+                    Image img = new javax.swing.ImageIcon(chemin).getImage();
+                    reglages.setImageFond(img, chemin);
+                    watchPanel.repaint();
+                }
             }
         });
 
         options.add(rbUniforme);
         options.add(rbDegrade);
+        options.add(rbImage);
+        options.add(btnChoisirImage);
         options.add(Box.createVerticalStrut(15));
 
         // --- Type d'affichage ---
