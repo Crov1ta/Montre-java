@@ -69,6 +69,8 @@ public class WatchModel implements Serializable {
                 new FileInputStream(chemin))) {
             WatchModel m = (WatchModel) ois.readObject();
             m.heureCourante = LocalTime.now();
+            m.simulationManuelle = false;
+            m.tick();
             return m;
         }
     }
