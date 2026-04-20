@@ -553,6 +553,13 @@ private void mettreAJourSecondes() {
                     try {
                         modele = WatchModel.charger(fc.getSelectedFile().getAbsolutePath());
                         reglages = modele.getReglages();
+                        // Recharge l'image depuis le chemin si elle n'a pas été restaurée (champ transient)
+                        if (reglages.getTypeFond() == ReglagesMontre.TypeFond.IMAGE
+                                && reglages.getImageFond() == null
+                                && reglages.getCheminImageFond() != null) {
+                            Image img = new javax.swing.ImageIcon(reglages.getCheminImageFond()).getImage();
+                            reglages.setImageFond(img, reglages.getCheminImageFond());
+                        }
                         watchPanel.setModele(modele);
                         watchPanel.setReglages(reglages);
                         watchPanel.repaint();

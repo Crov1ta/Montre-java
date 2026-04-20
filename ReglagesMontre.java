@@ -1,5 +1,7 @@
 import java.awt.Color;
 import java.awt.Image;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 /**
@@ -64,4 +66,15 @@ public class ReglagesMontre implements Serializable {
         this.cheminImageFond = null;
     }
     public String getCheminImageFond()              { return cheminImageFond; }
+
+    /**
+     * Recharge l'image depuis le chemin après désérialisation,
+     * car le champ imageFond est transient (non sérialisable).
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject(); // désérialise tous les champs non-transient
+        if (cheminImageFond != null) {
+            imageFond = new javax.swing.ImageIcon(cheminImageFond).getImage();
+        }
+    }
 }
