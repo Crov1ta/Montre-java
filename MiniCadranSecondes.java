@@ -11,6 +11,12 @@ import java.time.LocalTime;
 public class MiniCadranSecondes extends ElementMontreAbstrait {
 
     private int secondes;
+    private final ReglagesMontre reglages;
+    private Color couleurFond = Color.BLACK;
+
+    public MiniCadranSecondes(ReglagesMontre reglages) {
+        this.reglages = reglages;
+    }
 
     @Override
     public void update(LocalTime time) {
@@ -24,7 +30,7 @@ public class MiniCadranSecondes extends ElementMontreAbstrait {
         int miniCy = cy + rayon / 2;
 
         // Fond du mini cadran
-        g2d.setColor(new Color(30, 30, 30));
+        g2d.setColor(couleurFond);
         g2d.fill(new Ellipse2D.Double(miniCx - miniRayon, miniCy - miniRayon, miniRayon * 2, miniRayon * 2));
 
         // Contour
@@ -38,8 +44,8 @@ public class MiniCadranSecondes extends ElementMontreAbstrait {
         int x = miniCx + (int) (longueur * Math.cos(angle));
         int y = miniCy + (int) (longueur * Math.sin(angle));
 
-        g2d.setColor(Color.RED);
-        g2d.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2d.setColor(reglages.getCouleurAiguilles());
+        g2d.setStroke(new BasicStroke(1.5f * reglages.getFacteurEpaisseur(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2d.drawLine(miniCx, miniCy, x, y);
 
         // Centre

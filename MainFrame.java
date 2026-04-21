@@ -223,6 +223,15 @@ public class MainFrame extends JFrame {
         return panel;
     }
 
+private void appliquerFacteurEpaisseur(float facteur) {
+    for (ElementMontre el : modele.getElements()) {
+        if (el instanceof Aiguille) {
+            ((Aiguille) el).setFacteurEpaisseur(facteur);
+        }
+    }
+    watchPanel.repaint();
+}
+
 private void mettreAJourSecondes() {
     modele.retirerElementType(AiguilleSecondes.class);
     modele.retirerElementType(MiniCadranSecondes.class);
@@ -231,11 +240,12 @@ private void mettreAJourSecondes() {
     if (rbTrotteuse.isSelected()) {
         AiguilleSecondes as = new AiguilleSecondes();
         as.setCouleur(reglages.getCouleurAiguilles());
+        as.setFacteurEpaisseur(reglages.getFacteurEpaisseur());
         modele.ajouterElement(as);
 
     } else if (rbMiniCadran.isSelected()) {
         // On insère le mini cadran EN PREMIER (index 0)
-        modele.ajouterElementEnPremier(new MiniCadranSecondes());
+        modele.ajouterElementEnPremier(new MiniCadranSecondes(reglages));
 
     } else if (rbCompteur.isSelected()) {
         modele.ajouterElement(new CompteurSecondes());
@@ -415,9 +425,42 @@ private void mettreAJourSecondes() {
             }
         });
 
-        options.add(new JLabel(" Couleur & type police :")); 
-        options.add(btnCouleurAig);              
-        options.add(Box.createVerticalStrut(15));
+        JButton btnCouleurNombres = new JButton("Couleur des chiffres");
+        btnCouleurNombres.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color c = JColorChooser.showDialog(null, "Couleur des chiffres", reglages.getCouleurNombres());
+                if (c != null) {
+                    reglages.setCouleurNombres(c);
+                    watchPanel.repaint();
+                }
+            }
+        });
+
+        JLabel lblEpaisseur = new JLabel("Épaisseur des aiguilles : 1");
+        JSlider sliderEpaisseur = new JSlider(1, 5, 1);
+        sliderEpaisseur.setMajorTickSpacing(1);
+        sliderEpaisseur.setPaintTicks(true);
+        sliderEpaisseur.setPaintLabels(true);
+        sliderEpaisseur.setMaximumSize(new Dimension(200, 50));
+        sliderEpaisseur.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent e) {
+                float facteur = sliderEpaisseur.getValue();
+                lblEpaisseur.setText("Épaisseur des aiguilles : " + sliderEpaisseur.getValue());
+                reglages.setFacteurEpaisseur(facteur);
+                appliquerFacteurEpaisseur(facteur);
+            }
+        });
+
+        options.add(new JLabel(" Couleur & type police :"));
+        options.add(btnCouleurAig);
+        options.add(btnCouleurNombres);
+        options.add(Box.createVerticalStrut(10));
+        options.add(lblEpaisseur);
+        options.add(sliderEpaisseur);
+        options.add(Box.createVerticalStrut(5));
+        options.add(new JLabel("type de police :"));
         options.add(comboPolice);
         options.add(Box.createVerticalStrut(15));
         comboPolice.setMaximumSize(new Dimension(200, 30));
@@ -454,11 +497,49 @@ private void mettreAJourSecondes() {
                 watchPanel.repaint();
             }
         });
+        
+        JButton choixCouleur = new JButton("Couleur de fond");
+        choixCouleur.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e){
+                Color c = JColorChooser.showDialog(null, "Couleur du fond", reglages.getCouleurFond());
+                if (c != null) {
+                    reglages.setCouleurFond(c);
+                    watchPanel.repaint();
+                }
+            }
+        });
+
+        JButton choixCouleur2 = new JButton("Couleur de fond 2 (dégradé)");
+        choixCouleur2.setEnabled(false);
+        choixCouleur2.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e){
+                Color c = JColorChooser.showDialog(null, "Deuxième couleur du dégradé", reglages.getCouleurFond2());
+                if (c != null) {
+                    reglages.setCouleurFond2(c);
+                    watchPanel.repaint();
+                }
+            }
+        });
+
+        rbUniforme.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                choixCouleur2.setEnabled(false);
+            }
+        });
+        rbDegrade.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                choixCouleur2.setEnabled(true);
+            }
+        });
+
         rbImage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 btnChoisirImage.setEnabled(true);
-                // Si une image est déjà chargée, on l'applique directement
+                choixCouleur.setEnabled(false);
+                choixCouleur2.setEnabled(false);
                 if (reglages.getImageFond() != null) {
                     reglages.setTypeFond(ReglagesMontre.TypeFond.IMAGE);
                     watchPanel.repaint();
@@ -482,8 +563,11 @@ private void mettreAJourSecondes() {
 
         options.add(rbUniforme);
         options.add(rbDegrade);
+        options.add(choixCouleur);
+        options.add(choixCouleur2);
         options.add(rbImage);
         options.add(btnChoisirImage);
+   
         options.add(Box.createVerticalStrut(15));
 
         // --- Type d'affichage ---
@@ -504,10 +588,12 @@ private void mettreAJourSecondes() {
                 AiguilleMinutes am = new AiguilleMinutes();
                 AiguilleSecondes as = new AiguilleSecondes();
 
-                // Applique la couleur sauvegardée
                 ah.setCouleur(reglages.getCouleurAiguilles());
                 am.setCouleur(reglages.getCouleurAiguilles());
                 as.setCouleur(reglages.getCouleurAiguilles());
+                ah.setFacteurEpaisseur(reglages.getFacteurEpaisseur());
+                am.setFacteurEpaisseur(reglages.getFacteurEpaisseur());
+                as.setFacteurEpaisseur(reglages.getFacteurEpaisseur());
 
                 modele.ajouterElement(ah);
                 modele.ajouterElement(am);

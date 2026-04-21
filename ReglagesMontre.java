@@ -30,6 +30,8 @@ public class ReglagesMontre implements Serializable {
     private Color         couleurFond2  = Color.DARK_GRAY; // pour le dégradé
     private TypeAffichage typeAffichage = TypeAffichage.ANALOGIQUE;
     private Color         couleurAiguilles = Color.RED;
+    private Color         couleurNombres   = Color.WHITE;
+    private float         facteurEpaisseur = 1.0f;
 
     // L'image n'est pas sérialisable : transient + on garde le chemin pour recharger
     private transient Image imageFond = null;
@@ -54,6 +56,12 @@ public class ReglagesMontre implements Serializable {
 
     public Color getCouleurAiguilles()              { return couleurAiguilles; }
     public void setCouleurAiguilles(Color c)        { this.couleurAiguilles = c; }
+
+    public Color getCouleurNombres()                { return couleurNombres; }
+    public void setCouleurNombres(Color c)          { this.couleurNombres = c; }
+
+    public float getFacteurEpaisseur()              { return facteurEpaisseur; }
+    public void setFacteurEpaisseur(float f)        { this.facteurEpaisseur = f; }
 
     public Image getImageFond()                     { return imageFond; }
     public void setImageFond(Image img, String chemin) {

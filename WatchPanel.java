@@ -67,7 +67,7 @@ public class WatchPanel extends JPanel {
 
         // 3. Nombres (1-12) — uniquement en mode analogique
         if (reglages.getTypeAffichage() == ReglagesMontre.TypeAffichage.ANALOGIQUE) {
-            g2d.setColor(Color.WHITE);
+            g2d.setColor(reglages.getCouleurNombres());
             g2d.setFont(new Font("Arial", Font.BOLD, 16));
 
             for (int i = 1; i <= 12; i++) {

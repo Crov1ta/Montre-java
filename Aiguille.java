@@ -14,11 +14,13 @@ public abstract class Aiguille extends ElementMontreAbstrait {
 
     protected  Color  couleur;
     protected  float  epaisseur;
+    protected  float  epaisseurBase;
     protected  double ratioLongueur; // fraction du rayon
 
     protected Aiguille(Color couleur, float epaisseur, double ratioLongueur) {
         this.couleur       = couleur;
         this.epaisseur     = epaisseur;
+        this.epaisseurBase = epaisseur;
         this.ratioLongueur = ratioLongueur;
     }
 
@@ -44,7 +46,11 @@ public abstract class Aiguille extends ElementMontreAbstrait {
         this.couleur = couleur;
     }
     public void setEpaisseur(float ep) {
-        this.epaisseur = ep;
+        this.epaisseur     = ep;
+        this.epaisseurBase = ep;
+    }
+    public void setFacteurEpaisseur(float facteur) {
+        this.epaisseur = epaisseurBase * facteur;
     }
     public void setRatioLongueur(double ratio) {
         this.ratioLongueur = ratio;
