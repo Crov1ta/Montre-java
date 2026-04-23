@@ -481,24 +481,10 @@ private void mettreAJourSecondes() {
         JButton btnChoisirImage = new JButton("Choisir une image...");
         btnChoisirImage.setEnabled(false);
 
-        rbUniforme.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                reglages.setTypeFond(ReglagesMontre.TypeFond.UNIFORME);
-                btnChoisirImage.setEnabled(false);
-                watchPanel.repaint();
-            }
-        });
-        rbDegrade.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                reglages.setTypeFond(ReglagesMontre.TypeFond.DEGRADE);
-                btnChoisirImage.setEnabled(false);
-                watchPanel.repaint();
-            }
-        });
+
         
         JButton choixCouleur = new JButton("Couleur de fond");
+        choixCouleur.setEnabled(false);
         choixCouleur.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e){
                 Color c = JColorChooser.showDialog(null, "Couleur du fond", reglages.getCouleurFond());
@@ -520,17 +506,24 @@ private void mettreAJourSecondes() {
                 }
             }
         });
-
         rbUniforme.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                reglages.setTypeFond(ReglagesMontre.TypeFond.UNIFORME);
+                btnChoisirImage.setEnabled(false);
+                choixCouleur.setEnabled(true);
                 choixCouleur2.setEnabled(false);
+                watchPanel.repaint();
             }
         });
         rbDegrade.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                reglages.setTypeFond(ReglagesMontre.TypeFond.DEGRADE);
+                btnChoisirImage.setEnabled(false);
+                choixCouleur.setEnabled(true);
                 choixCouleur2.setEnabled(true);
+                watchPanel.repaint();
             }
         });
 
