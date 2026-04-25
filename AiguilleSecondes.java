@@ -41,7 +41,7 @@ public class AiguilleSecondes extends Aiguille {
         g2d.fillOval(cx - 4, cy - 4, 8, 8);
     }
 
-
+    @Override
     public String getNom() {
         return "Aiguille des secondes";
     }

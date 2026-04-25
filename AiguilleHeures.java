@@ -19,12 +19,12 @@ public class AiguilleHeures extends Aiguille {
         this.minutes = time.getMinute();
     }
 
-    
+    @Override
     protected double calculerAngle() {
         return Math.toRadians((heures * 30) + (minutes * 0.5) - 90);
     }
 
-    
+    @Override
     public String getNom() {
         return "Aiguille des heures";
     }

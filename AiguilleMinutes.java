@@ -18,11 +18,11 @@ public class AiguilleMinutes extends Aiguille {
         this.minutes  = time.getMinute();
         this.secondes = time.getSecond();
     }
-
+    @Override
     protected double calculerAngle() {
         return Math.toRadians((minutes * 6) + (secondes * 0.1) - 90);
     }
-
+    @Override
     public String getNom() {
         return "Aiguille des minutes";
     }
