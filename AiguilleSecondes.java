@@ -19,7 +19,7 @@ public class AiguilleSecondes extends Aiguille {
     public void update(LocalTime time) {
         this.secondes = time.getSecond();
     }
-
+    @Override
     protected double calculerAngle() {
         return Math.toRadians((secondes * 6) - 90);
     }

@@ -7,10 +7,10 @@ import javax.swing.JPanel;
  */
 public abstract class ElementMontreAbstrait implements ElementMontre {
 
- 
+    @Override
     public void configure(JPanel panel) {}
-
+    @Override
     public void setCouleur(Color c) {}
-    
+    @Override
     public void setPolice (String p){}
 }

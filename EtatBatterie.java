@@ -82,6 +82,6 @@ public class EtatBatterie extends ElementMontreAbstrait {
         if (pourcentage > 20) return Color.ORANGE;
         return Color.RED;
     }
-
+    @Override
     public String getNom() { return "État de la batterie"; }
 }
