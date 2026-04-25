@@ -10,11 +10,6 @@ import javax.swing.JPanel;
  */
 public interface ElementMontre extends Serializable {
 
-    /**
-     * Met à jour l'état interne de l'élément en fonction de l'heure courante.
-     *
-     * @param time l'heure actuelle
-     */
     void update(LocalTime time);
  
     void draw(Graphics2D g2d, int cx, int cy, int rayon);

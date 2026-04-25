@@ -3,7 +3,7 @@ import java.awt.geom.Ellipse2D;
 import java.time.LocalTime;
 
 /**
- * Mini cadran analogique des secondes, affiché dans le coin du cadran principal.
+ * Mini cadran analogique des secondes.
  */
 public class MiniCadranSecondes extends ElementMontreAbstrait {
 

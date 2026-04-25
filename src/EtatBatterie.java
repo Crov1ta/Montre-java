@@ -2,7 +2,7 @@ import java.awt.*;
 import java.time.LocalTime;
 
 /**
- * État de la batterie simulé — cadran via draw(), pleine page via drawPage().
+ * État de la batterie simulé cadran via draw(), pleine page via drawPage().
  */
 public class EtatBatterie extends ElementMontreAbstrait {
 

@@ -30,7 +30,6 @@ public class ReglagesMontre implements Serializable {
     private Color         couleurNombres   = Color.WHITE;
     private float         facteurEpaisseur = 1.0f;
 
-    // L'image n'est pas sérialisable : transient + on garde le chemin pour recharger
     private transient Image imageFond = null;
     private String cheminImageFond    = null;
 
@@ -72,10 +71,7 @@ public class ReglagesMontre implements Serializable {
     }
     public String getCheminImageFond()              { return cheminImageFond; }
 
-    /**
-     * Recharge l'image depuis le chemin après désérialisation,
-     * car le champ imageFond est transient (non sérialisable).
-     */
+
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject(); // désérialise tous les champs non-transient
         if (cheminImageFond != null) {
