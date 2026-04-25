@@ -6,9 +6,6 @@ import java.awt.event.ActionListener;
 /**
  * Fenêtre principale de l'application Montre.
  * Navigation entre 5 pages via une barre de boutons en bas.
- *
- * @author Mohamed
- * @version 3.0
  */
 public class MainFrame extends JFrame {
 
@@ -50,6 +47,8 @@ public class MainFrame extends JFrame {
         cardLayout = new CardLayout();
         container  = new JPanel(cardLayout);
 
+        
+
         container.add(creerPageMontre(),    "montre");
         container.add(creerPageDate(),      "date");
         container.add(creerPageRythme(),    "rythme");
@@ -63,7 +62,7 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 java.time.LocalTime now = java.time.LocalTime.now();
-                modele.tick();
+                MainFrame.this.modele.tick();
                 rythmeCardiaque.update(now);
                 etatBatterie.update(now);
                 watchPanel.repaint();
@@ -185,14 +184,52 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) { mettreAJourSecondes(); }
         });
+        JButton btnSimuler = new JButton("Heure personnalisée");
+        btnSimuler.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTextField tfH = new JTextField("12", 2);
+                JTextField tfM = new JTextField("00", 2);
+                JTextField tfS = new JTextField("00", 2);
+
+                JPanel p = new JPanel();
+                p.add(new JLabel("H:")); p.add(tfH);
+                p.add(new JLabel("M:")); p.add(tfM);
+                p.add(new JLabel("S:")); p.add(tfS);
+
+                int result = JOptionPane.showConfirmDialog(null, p,
+                    "Heure de départ", JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    try {
+                        int h = Integer.parseInt(tfH.getText().trim());
+                        int m = Integer.parseInt(tfM.getText().trim());
+                        int s = Integer.parseInt(tfS.getText().trim());
+                        modele.demarrerSimulation(h, m, s);
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Heure invalide.");
+                    }
+                }
+            }
+        });
 
         panel.add(new JLabel("Secondes : "));
         panel.add(rbTrotteuse);
         panel.add(rbMiniCadran);
         panel.add(rbCompteur);
+        panel.add(btnSimuler); 
 
         return panel;
     }
+
+private void appliquerFacteurEpaisseur(float facteur) {
+    for (ElementMontre el : modele.getElements()) {
+        if (el instanceof Aiguille) {
+            ((Aiguille) el).setFacteurEpaisseur(facteur);
+        }
+    }
+    watchPanel.repaint();
+}
 
 private void mettreAJourSecondes() {
     modele.retirerElementType(AiguilleSecondes.class);
@@ -202,11 +239,12 @@ private void mettreAJourSecondes() {
     if (rbTrotteuse.isSelected()) {
         AiguilleSecondes as = new AiguilleSecondes();
         as.setCouleur(reglages.getCouleurAiguilles());
+        as.setFacteurEpaisseur(reglages.getFacteurEpaisseur());
         modele.ajouterElement(as);
 
     } else if (rbMiniCadran.isSelected()) {
         // On insère le mini cadran EN PREMIER (index 0)
-        modele.ajouterElementEnPremier(new MiniCadranSecondes());
+        modele.ajouterElementEnPremier(new MiniCadranSecondes(reglages));
 
     } else if (rbCompteur.isSelected()) {
         modele.ajouterElement(new CompteurSecondes());
@@ -239,7 +277,29 @@ private void mettreAJourSecondes() {
         dessin.setBackground(Color.BLACK);
         dessin.setPreferredSize(new Dimension(350, 350));
 
-        page.add(dessin, BorderLayout.CENTER);
+        // --- Sélecteur de format ---
+        JComboBox<DateDisplay.FormatDate> comboFormat =
+                new JComboBox<>(DateDisplay.FormatDate.values());
+        comboFormat.setSelectedItem(DateDisplay.FormatDate.COURT);
+        comboFormat.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DateDisplay.FormatDate fmt =
+                        (DateDisplay.FormatDate) comboFormat.getSelectedItem();
+                dateDisplay.setFormat(fmt);
+                dessin.repaint();
+            }
+        });
+
+        JPanel barreFormat = new JPanel();
+        barreFormat.setBackground(Color.BLACK);
+        barreFormat.add(new JLabel("Format : ") {{
+            setForeground(Color.WHITE);
+        }});
+        barreFormat.add(comboFormat);
+
+        page.add(dessin,       BorderLayout.CENTER);
+        page.add(barreFormat,  BorderLayout.SOUTH);
         return page;
     }
 
@@ -334,12 +394,13 @@ private void mettreAJourSecondes() {
         options.add(rbRond);
         options.add(rbCarre);
         options.add(Box.createVerticalStrut(15));
+
         // Couleur & type police
+
         JButton btnCouleurAig= new JButton("Couleur aiguille");
         btnCouleurAig.addActionListener(new ActionListener(){
             @Override public void actionPerformed(ActionEvent e){
                  Color c = JColorChooser.showDialog(null, "Couleur des aiguilles", Color.RED);
-                 
                  if ( c != null){
                     reglages.setCouleurAiguilles(c);
                     for (ElementMontre el : modele.getElements()){
@@ -349,22 +410,108 @@ private void mettreAJourSecondes() {
                  }
             }
         });
-        options.add(new JLabel(" Couleur & type police :")); 
-        options.add(btnCouleurAig);              
+        String[] polices = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        JComboBox<String> comboPolice = new JComboBox<>(polices);
+        comboPolice.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e){
+                String police = (String) comboPolice.getSelectedItem();
+                if ( police != null){
+                    for (ElementMontre el : modele.getElements()){
+                        el.setPolice(police);
+                    }
+                    watchPanel.repaint();
+                }
+            }
+        });
+
+        JButton btnCouleurNombres = new JButton("Couleur des chiffres");
+        btnCouleurNombres.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color c = JColorChooser.showDialog(null, "Couleur des chiffres", reglages.getCouleurNombres());
+                if (c != null) {
+                    reglages.setCouleurNombres(c);
+                    watchPanel.repaint();
+                }
+            }
+        });
+
+        JLabel lblEpaisseur = new JLabel("Épaisseur des aiguilles : 1");
+        JSlider sliderEpaisseur = new JSlider(1, 5, 1);
+        sliderEpaisseur.setMajorTickSpacing(1);
+        sliderEpaisseur.setPaintTicks(true);
+        sliderEpaisseur.setPaintLabels(true);
+        sliderEpaisseur.setMaximumSize(new Dimension(200, 50));
+        sliderEpaisseur.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent e) {
+                float facteur = sliderEpaisseur.getValue();
+                lblEpaisseur.setText("Épaisseur des aiguilles : " + sliderEpaisseur.getValue());
+                reglages.setFacteurEpaisseur(facteur);
+                appliquerFacteurEpaisseur(facteur);
+            }
+        });
+
+        options.add(new JLabel(" Couleur & type police :"));
+        options.add(btnCouleurAig);
+        options.add(btnCouleurNombres);
+        options.add(Box.createVerticalStrut(10));
+        options.add(lblEpaisseur);
+        options.add(sliderEpaisseur);
+        options.add(Box.createVerticalStrut(5));
+        options.add(new JLabel("type de police :"));
+        options.add(comboPolice);
         options.add(Box.createVerticalStrut(15));
+        comboPolice.setMaximumSize(new Dimension(200, 30));
+
+
+
         // --- Couleur du fond ---
         options.add(new JLabel("Fond :"));
         
         JRadioButton rbUniforme = new JRadioButton("Uniforme", true);
         JRadioButton rbDegrade  = new JRadioButton("Dégradé");
+        JRadioButton rbImage    = new JRadioButton("Image");
         ButtonGroup  grFond     = new ButtonGroup();
         grFond.add(rbUniforme);
         grFond.add(rbDegrade);
+        grFond.add(rbImage);
 
+        JButton btnChoisirImage = new JButton("Choisir une image...");
+        btnChoisirImage.setEnabled(false);
+
+
+        
+        JButton choixCouleur = new JButton("Couleur de fond");
+        choixCouleur.setEnabled(false);
+        choixCouleur.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e){
+                Color c = JColorChooser.showDialog(null, "Couleur du fond", reglages.getCouleurFond());
+                if (c != null) {
+                    reglages.setCouleurFond(c);
+                    watchPanel.repaint();
+                }
+            }
+        });
+
+        JButton choixCouleur2 = new JButton("Couleur de fond 2 (dégradé)");
+        choixCouleur2.setEnabled(false);
+        choixCouleur2.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e){
+                Color c = JColorChooser.showDialog(null, "Deuxième couleur du dégradé", reglages.getCouleurFond2());
+                if (c != null) {
+                    reglages.setCouleurFond2(c);
+                    watchPanel.repaint();
+                }
+            }
+        });
         rbUniforme.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reglages.setTypeFond(ReglagesMontre.TypeFond.UNIFORME);
+                btnChoisirImage.setEnabled(false);
+                choixCouleur.setEnabled(true);
+                choixCouleur2.setEnabled(false);
                 watchPanel.repaint();
             }
         });
@@ -372,12 +519,47 @@ private void mettreAJourSecondes() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reglages.setTypeFond(ReglagesMontre.TypeFond.DEGRADE);
+                btnChoisirImage.setEnabled(false);
+                choixCouleur.setEnabled(true);
+                choixCouleur2.setEnabled(true);
                 watchPanel.repaint();
+            }
+        });
+
+        rbImage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnChoisirImage.setEnabled(true);
+                choixCouleur.setEnabled(false);
+                choixCouleur2.setEnabled(false);
+                if (reglages.getImageFond() != null) {
+                    reglages.setTypeFond(ReglagesMontre.TypeFond.IMAGE);
+                    watchPanel.repaint();
+                }
+            }
+        });
+        btnChoisirImage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fc = new JFileChooser();
+                fc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                        "Images (jpg, png, gif)", "jpg", "jpeg", "png", "gif"));
+                if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    String chemin = fc.getSelectedFile().getAbsolutePath();
+                    Image img = new javax.swing.ImageIcon(chemin).getImage();
+                    reglages.setImageFond(img, chemin);
+                    watchPanel.repaint();
+                }
             }
         });
 
         options.add(rbUniforme);
         options.add(rbDegrade);
+        options.add(choixCouleur);
+        options.add(choixCouleur2);
+        options.add(rbImage);
+        options.add(btnChoisirImage);
+   
         options.add(Box.createVerticalStrut(15));
 
         // --- Type d'affichage ---
@@ -398,10 +580,12 @@ private void mettreAJourSecondes() {
                 AiguilleMinutes am = new AiguilleMinutes();
                 AiguilleSecondes as = new AiguilleSecondes();
 
-                // Applique la couleur sauvegardée
                 ah.setCouleur(reglages.getCouleurAiguilles());
                 am.setCouleur(reglages.getCouleurAiguilles());
                 as.setCouleur(reglages.getCouleurAiguilles());
+                ah.setFacteurEpaisseur(reglages.getFacteurEpaisseur());
+                am.setFacteurEpaisseur(reglages.getFacteurEpaisseur());
+                as.setFacteurEpaisseur(reglages.getFacteurEpaisseur());
 
                 modele.ajouterElement(ah);
                 modele.ajouterElement(am);
@@ -447,6 +631,13 @@ private void mettreAJourSecondes() {
                     try {
                         modele = WatchModel.charger(fc.getSelectedFile().getAbsolutePath());
                         reglages = modele.getReglages();
+                        // Recharge l'image depuis le chemin si elle n'a pas été restaurée (champ transient)
+                        if (reglages.getTypeFond() == ReglagesMontre.TypeFond.IMAGE
+                                && reglages.getImageFond() == null
+                                && reglages.getCheminImageFond() != null) {
+                            Image img = new javax.swing.ImageIcon(reglages.getCheminImageFond()).getImage();
+                            reglages.setImageFond(img, reglages.getCheminImageFond());
+                        }
                         watchPanel.setModele(modele);
                         watchPanel.setReglages(reglages);
                         watchPanel.repaint();
@@ -457,12 +648,14 @@ private void mettreAJourSecondes() {
             }
         });
 
-        options.add(Box.createVerticalStrut(15));
-        options.add(btnSauvegarder);
-        options.add(btnCharger);
+
 
         options.add(rbAnalogique);
         options.add(rbNumerique);
+
+        options.add(Box.createVerticalStrut(15));
+        options.add(btnSauvegarder);
+        options.add(btnCharger);
 
         page.add(options, BorderLayout.CENTER);
         return page;

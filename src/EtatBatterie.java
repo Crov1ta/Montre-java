@@ -2,10 +2,7 @@ import java.awt.*;
 import java.time.LocalTime;
 
 /**
- * État de la batterie simulé — cadran via draw(), pleine page via drawPage().
- *
- * @author Mohamed
- * @version 2.0
+ * État de la batterie simulé cadran via draw(), pleine page via drawPage().
  */
 public class EtatBatterie extends ElementMontreAbstrait {
 
@@ -85,7 +82,6 @@ public class EtatBatterie extends ElementMontreAbstrait {
         if (pourcentage > 20) return Color.ORANGE;
         return Color.RED;
     }
-
     @Override
     public String getNom() { return "État de la batterie"; }
 }

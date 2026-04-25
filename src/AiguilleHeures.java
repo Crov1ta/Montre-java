@@ -3,10 +3,7 @@ import java.time.LocalTime;
 
 /**
  * Aiguille des heures d'une montre analogique.
- *
- * @author Mohamed
- * @version 2.0
- */
+*/
 public class AiguilleHeures extends Aiguille {
 
     private int heures;

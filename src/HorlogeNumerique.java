@@ -4,9 +4,6 @@ import java.time.LocalTime;
 /**
  * Affichage numérique de l'heure sur le cadran.
  * Remplace les aiguilles quand le mode numérique est sélectionné.
- *
- * @author Mohamed
- * @version 1.0
  */
 public class HorlogeNumerique extends ElementMontreAbstrait {
 
@@ -14,6 +11,7 @@ public class HorlogeNumerique extends ElementMontreAbstrait {
     private int minutes;
     private int secondes;
     private Color couleur = Color.WHITE;
+    private String police = "Monospaced" ;
 
     @Override
     public void update(LocalTime time) {
@@ -26,7 +24,7 @@ public class HorlogeNumerique extends ElementMontreAbstrait {
     public void draw(Graphics2D g2d, int cx, int cy, int rayon) {
         String texte = String.format("%02d:%02d:%02d", heures, minutes, secondes);
 
-        g2d.setFont(new Font("Monospaced", Font.BOLD, rayon / 4));
+        g2d.setFont(new Font(police, Font.BOLD, rayon / 4));
         FontMetrics fm = g2d.getFontMetrics();
         int tw = fm.stringWidth(texte);
 
@@ -35,8 +33,12 @@ public class HorlogeNumerique extends ElementMontreAbstrait {
     }
 
     public Color getCouleur()       { return couleur; }
-    public void setCouleur(Color c) { this.couleur = c; }
+    @Override public void setCouleur(Color c) { this.couleur = c; }
 
     @Override
     public String getNom() { return "Horloge numérique"; }
+    @Override public void setPolice(String p){
+        this.police = p ;
+    }
+
 }

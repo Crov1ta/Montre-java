@@ -6,9 +6,6 @@ import javax.swing.*;
 /**
  * Panneau Swing qui dessine le cadran de la montre.
  * Adapte son rendu selon les ReglagesMontre (forme, fond, mode d'affichage).
- *
- * @author Mohamed
- * @version 2.0
  */
 public class WatchPanel extends JPanel {
 
@@ -20,6 +17,16 @@ public class WatchPanel extends JPanel {
         this.reglages = reglages;
         setPreferredSize(new Dimension(350, 350));
         setBackground(Color.DARK_GRAY);
+    }
+
+    public void setModele(WatchModel modele) {
+        this.modele = modele;
+        repaint();
+    }
+    
+    public void setReglages(ReglagesMontre reglages) {
+        this.reglages = reglages;
+        repaint();
     }
 
     @Override
@@ -41,15 +48,24 @@ public class WatchPanel extends JPanel {
             ? new Ellipse2D.Double(cx - rayon, cy - rayon, rayon * 2, rayon * 2)
             : new RoundRectangle2D.Double(cx - rayon, cy - rayon, rayon * 2, rayon * 2, 20, 20);
 
-        if (reglages.getTypeFond() == ReglagesMontre.TypeFond.DEGRADE) {
+        if (reglages.getTypeFond() == ReglagesMontre.TypeFond.IMAGE
+                && reglages.getImageFond() != null) {
+            // Clipper l'image à la forme du cadran pour qu'elle reste à l'intérieur
+            Shape ancienClip = g2d.getClip();
+            g2d.setClip(forme);
+            g2d.drawImage(reglages.getImageFond(),
+                          cx - rayon, cy - rayon, rayon * 2, rayon * 2, null);
+            g2d.setClip(ancienClip);
+        } else if (reglages.getTypeFond() == ReglagesMontre.TypeFond.DEGRADE) {
             GradientPaint degrade = new GradientPaint(
                 cx, cy - rayon, reglages.getCouleurFond(),
                 cx, cy + rayon, reglages.getCouleurFond2());
             g2d.setPaint(degrade);
+            g2d.fill(forme);
         } else {
             g2d.setColor(reglages.getCouleurFond());
+            g2d.fill(forme);
         }
-        g2d.fill(forme);
 
         // 2. Contour
         g2d.setColor(Color.LIGHT_GRAY);
@@ -58,7 +74,7 @@ public class WatchPanel extends JPanel {
 
         // 3. Nombres (1-12) — uniquement en mode analogique
         if (reglages.getTypeAffichage() == ReglagesMontre.TypeAffichage.ANALOGIQUE) {
-            g2d.setColor(Color.WHITE);
+            g2d.setColor(reglages.getCouleurNombres());
             g2d.setFont(new Font("Arial", Font.BOLD, 16));
 
             for (int i = 1; i <= 12; i++) {
@@ -78,12 +94,4 @@ public class WatchPanel extends JPanel {
         }
     }
 
-    public void setModele(WatchModel modele) {
-        this.modele = modele;
-        repaint();
-    }
-    public void setReglages(ReglagesMontre reglages) {
-        this.reglages = reglages;
-        repaint();
-    }
 }

@@ -6,9 +6,6 @@ import java.util.List;
 /**
  * Modèle principal de la montre.
  * Contient la liste des éléments et gère l'heure.
- *
- * @author Mohamed
- * @version 1.0
  */
 public class WatchModel implements Serializable {
 
@@ -69,6 +66,8 @@ public class WatchModel implements Serializable {
                 new FileInputStream(chemin))) {
             WatchModel m = (WatchModel) ois.readObject();
             m.heureCourante = LocalTime.now();
+            m.simulationManuelle = false;
+            m.tick();
             return m;
         }
     }

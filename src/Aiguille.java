@@ -6,26 +6,25 @@ import java.awt.Graphics2D;
  * Classe abstraite représentant une aiguille de montre.
  * Utilise le patron Template Method : draw() appelle calculerAngle()
  * que chaque sous-classe concrète doit implémenter.
- *
- * @author Mohamed
- * @version 1.0
  */
 public abstract class Aiguille extends ElementMontreAbstrait {
 
     protected  Color  couleur;
     protected  float  epaisseur;
+    protected  float  epaisseurBase;
     protected  double ratioLongueur; // fraction du rayon
 
     protected Aiguille(Color couleur, float epaisseur, double ratioLongueur) {
         this.couleur       = couleur;
         this.epaisseur     = epaisseur;
+        this.epaisseurBase = epaisseur;
         this.ratioLongueur = ratioLongueur;
     }
 
-    /**
-     * Calcule l'angle de l'aiguille en radians.
-     * Chaque sous-classe fournit sa propre formule.
-     */
+ /**
+  * Calcule l'angle de l'aiguille en radians.
+  * Chaque sous-classe fournit sa propre formule.
+  */
     protected abstract double calculerAngle();
 
     @Override
@@ -44,7 +43,11 @@ public abstract class Aiguille extends ElementMontreAbstrait {
         this.couleur = couleur;
     }
     public void setEpaisseur(float ep) {
-        this.epaisseur = ep;
+        this.epaisseur     = ep;
+        this.epaisseurBase = ep;
+    }
+    public void setFacteurEpaisseur(float facteur) {
+        this.epaisseur = epaisseurBase * facteur;
     }
     public void setRatioLongueur(double ratio) {
         this.ratioLongueur = ratio;
