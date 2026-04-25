@@ -3,9 +3,6 @@ import java.time.LocalTime;
 
 /**
  * État de la batterie simulé — cadran via draw(), pleine page via drawPage().
- *
- * @author Mohamed
- * @version 2.0
  */
 public class EtatBatterie extends ElementMontreAbstrait {
 
@@ -86,6 +83,5 @@ public class EtatBatterie extends ElementMontreAbstrait {
         return Color.RED;
     }
 
-    @Override
     public String getNom() { return "État de la batterie"; }
 }

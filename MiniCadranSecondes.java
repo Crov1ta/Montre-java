@@ -4,9 +4,6 @@ import java.time.LocalTime;
 
 /**
  * Mini cadran analogique des secondes, affiché dans le coin du cadran principal.
- *
- * @author Mohamed
- * @version 1.0
  */
 public class MiniCadranSecondes extends ElementMontreAbstrait {
 

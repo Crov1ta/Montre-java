@@ -7,9 +7,6 @@ import java.io.Serializable;
 /**
  * Stocke la configuration visuelle de la montre.
  * Utilisée par WatchPanel pour adapter le rendu.
- *
- * @author Mohamed
- * @version 1.0
  */
 public class ReglagesMontre implements Serializable {
 

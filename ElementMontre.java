@@ -7,9 +7,6 @@ import javax.swing.JPanel;
 /**
  * Interface représentant un élément affichable sur une montre analogique.
  * Chaque élément peut se mettre à jour, se dessiner et se configurer via l'UI.
- *
- * @author Mohamed
- * @version 1.0
  */
 public interface ElementMontre extends Serializable {
 
@@ -28,7 +25,7 @@ public interface ElementMontre extends Serializable {
 
     public void setCouleur( Color c);   
 
-     public void setPolice (String p);
+    public void setPolice (String p);
 
     
 }

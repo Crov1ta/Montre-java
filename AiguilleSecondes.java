@@ -6,9 +6,6 @@ import java.time.LocalTime;
 /**
  * Aiguille des secondes d'une montre analogique.
  * Surcharge draw() pour ajouter une queue derrière le centre.
- *
- * @author Mohamed
- * @version 2.0
  */
 public class AiguilleSecondes extends Aiguille {
 
@@ -23,7 +20,6 @@ public class AiguilleSecondes extends Aiguille {
         this.secondes = time.getSecond();
     }
 
-    @Override
     protected double calculerAngle() {
         return Math.toRadians((secondes * 6) - 90);
     }
@@ -45,7 +41,7 @@ public class AiguilleSecondes extends Aiguille {
         g2d.fillOval(cx - 4, cy - 4, 8, 8);
     }
 
-    @Override
+
     public String getNom() {
         return "Aiguille des secondes";
     }

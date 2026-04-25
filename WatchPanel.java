@@ -6,9 +6,6 @@ import javax.swing.*;
 /**
  * Panneau Swing qui dessine le cadran de la montre.
  * Adapte son rendu selon les ReglagesMontre (forme, fond, mode d'affichage).
- *
- * @author Mohamed
- * @version 2.0
  */
 public class WatchPanel extends JPanel {
 
@@ -20,6 +17,16 @@ public class WatchPanel extends JPanel {
         this.reglages = reglages;
         setPreferredSize(new Dimension(350, 350));
         setBackground(Color.DARK_GRAY);
+    }
+
+    public void setModele(WatchModel modele) {
+        this.modele = modele;
+        repaint();
+    }
+    
+    public void setReglages(ReglagesMontre reglages) {
+        this.reglages = reglages;
+        repaint();
     }
 
     @Override
@@ -87,12 +94,4 @@ public class WatchPanel extends JPanel {
         }
     }
 
-    public void setModele(WatchModel modele) {
-        this.modele = modele;
-        repaint();
-    }
-    public void setReglages(ReglagesMontre reglages) {
-        this.reglages = reglages;
-        repaint();
-    }
 }

@@ -4,9 +4,6 @@ import java.util.Random;
 
 /**
  * Rythme cardiaque simulé — cadran via draw(), pleine page via drawPage().
- *
- * @author Mohamed
- * @version 2.0
  */
 public class RythmeCardiaque extends ElementMontreAbstrait {
 

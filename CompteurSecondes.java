@@ -1,12 +1,8 @@
 import java.awt.*;
 import java.time.LocalTime;
-import javax.swing.JPanel;
 
 /**
  * Affichage numérique des secondes en bas du cadran.
- *
- * @author Mohamed
- * @version 1.0
  */
 public class CompteurSecondes extends ElementMontreAbstrait {
 

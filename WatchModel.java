@@ -6,9 +6,6 @@ import java.util.List;
 /**
  * Modèle principal de la montre.
  * Contient la liste des éléments et gère l'heure.
- *
- * @author Mohamed
- * @version 1.0
  */
 public class WatchModel implements Serializable {
 

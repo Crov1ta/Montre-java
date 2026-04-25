@@ -8,15 +8,12 @@ import java.util.Locale;
 /**
  * Affiche la date — sur le cadran via draw() ou en pleine page via drawPage().
  * Supporte plusieurs formats d'affichage via l'enum FormatDate.
- *
- * @author Mohamed
- * @version 3.0
  */
 public class DateDisplay extends ElementMontreAbstrait {
 
     /** Formats de date disponibles. */
     public enum FormatDate {
-        COURT        ("dd/MM/yyyy",          "Court  — 19/04/2026"),
+        COURT        ("dd/MM/yyyy",          "Court  — DD/04/2026"),
         LONG         ("dd MMMM yyyy",        "Long   — 19 avril 2026"),
         AVEC_JOUR    ("EEEE dd MMMM yyyy",   "Complet — dimanche 19 avril 2026"),
         AMERICAIN    ("MM/dd/yyyy",           "Américain — 04/19/2026"),
@@ -69,9 +66,9 @@ public class DateDisplay extends ElementMontreAbstrait {
         int x  = cx + rayon / 3 - tw / 2;
         int y  = cy + th / 2;
 
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(Color.BLUE);
         g2d.fillRect(x - 4, y - th, tw + 8, th + 4);
-        g2d.setColor(Color.BLACK);
+        g2d.setColor(Color.BLUE);
         g2d.setStroke(new BasicStroke(1f));
         g2d.drawRect(x - 4, y - th, tw + 8, th + 4);
         g2d.drawString(dateTexte, x, y);

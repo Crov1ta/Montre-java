@@ -4,9 +4,6 @@ import java.time.LocalTime;
 /**
  * Affichage numérique de l'heure sur le cadran.
  * Remplace les aiguilles quand le mode numérique est sélectionné.
- *
- * @author Mohamed
- * @version 1.0
  */
 public class HorlogeNumerique extends ElementMontreAbstrait {
 

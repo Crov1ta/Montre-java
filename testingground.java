@@ -1,3 +1,0 @@
-class testingground {
-    int vr ;
-}

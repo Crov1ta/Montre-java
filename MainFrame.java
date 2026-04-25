@@ -6,9 +6,6 @@ import java.awt.event.ActionListener;
 /**
  * Fenêtre principale de l'application Montre.
  * Navigation entre 5 pages via une barre de boutons en bas.
- *
- * @author Mohamed
- * @version 3.0
  */
 public class MainFrame extends JFrame {
 
@@ -49,6 +46,8 @@ public class MainFrame extends JFrame {
 
         cardLayout = new CardLayout();
         container  = new JPanel(cardLayout);
+
+        
 
         container.add(creerPageMontre(),    "montre");
         container.add(creerPageDate(),      "date");
